@@ -25,7 +25,7 @@ block content
             td= p.nombre
             td $#{p.precio.toFixed(2)}
             td
-              span(class=p.stockBajo ? 'alerta' : '') = p.stock
+              span(class=p.stockBajo ? 'alerta' : '')= p.stock
               if p.stockBajo
                 span.badge-alerta  ⚠ stock bajo
             td= p.unidad
