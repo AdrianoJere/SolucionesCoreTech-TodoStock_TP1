@@ -1,0 +1,29 @@
+extends ../layouts/base
+
+block content
+  h1 🔄 Movimientos de Stock
+
+  if movimientos.length === 0
+    p.empty No hay movimientos registrados.
+  else
+    table
+      thead
+        tr
+          th ID
+          th Producto
+          th Tipo
+          th Cantidad
+          th Fecha
+          th Motivo
+      tbody
+        each m in movimientos
+          tr(class=m.tipo)
+            td= m.id
+            td= m.productoNombre
+            td
+              span.badge(class="badge-" + m.tipo)= m.tipo
+            td= m.impacto
+            td= m.fecha
+            td= m.motivo
+
+  a.btn(href="/") ← Volver a productos

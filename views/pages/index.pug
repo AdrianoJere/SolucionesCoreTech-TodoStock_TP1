@@ -1,0 +1,37 @@
+extends ../layouts/base
+
+block content
+  h1 📦 Listado de Productos
+
+  if productos.length === 0
+    p.empty No hay productos registrados.
+  else
+    table
+      thead
+        tr
+          th ID
+          th Nombre
+          th Precio
+          th Stock
+          th Unidad
+          th Lote
+          th Vencimiento
+          th Estado
+          th Detalle
+      tbody
+        each p in productos
+          tr(class=p.estado)
+            td= p.id
+            td= p.nombre
+            td $#{p.precio.toFixed(2)}
+            td
+              span(class=p.stockBajo ? 'alerta' : '') = p.stock
+              if p.stockBajo
+                span.badge-alerta  ⚠ stock bajo
+            td= p.unidad
+            td= p.lote
+            td= p.vencimiento
+            td
+              span.badge(class="badge-" + p.estado)= p.estado
+            td
+              a(href="/productos/" + p.id) Ver

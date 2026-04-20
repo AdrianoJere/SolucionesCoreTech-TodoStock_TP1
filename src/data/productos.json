@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "nombre": "Lavandina Concentrada 1L",
+    "precio": 850.00,
+    "stock": 120,
+    "unidad": "litro",
+    "lote": "L-2024-001",
+    "vencimiento": "2026-12-01",
+    "estado": "activo"
+  },
+  {
+    "id": 2,
+    "nombre": "Detergente Limón 500ml",
+    "precio": 620.00,
+    "stock": 85,
+    "unidad": "unidad",
+    "lote": "L-2024-002",
+    "vencimiento": "2027-03-15",
+    "estado": "activo"
+  },
+  {
+    "id": 3,
+    "nombre": "Desengrasante Industrial 5L",
+    "precio": 2100.00,
+    "stock": 8,
+    "unidad": "litro",
+    "lote": "L-2024-003",
+    "vencimiento": "2026-09-30",
+    "estado": "activo"
+  },
+  {
+    "id": 4,
+    "nombre": "Jabón en Polvo 1kg",
+    "precio": 950.00,
+    "stock": 0,
+    "unidad": "kg",
+    "lote": "L-2024-004",
+    "vencimiento": "2027-06-01",
+    "estado": "inactivo"
+  }
+]

@@ -1,0 +1,57 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f6f9;
+  color: #333;
+}
+
+nav {
+  background: #1a3a5c;
+  padding: 1rem 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+nav a { color: #90e0ef; text-decoration: none; font-weight: 600; }
+nav a:first-child { color: white; font-size: 1.1rem; }
+nav a:hover { color: white; }
+
+main { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+
+h1 { margin-bottom: 1.5rem; color: #1a3a5c; }
+h2 { margin: 1.5rem 0 1rem; color: #1a3a5c; }
+
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+th { background: #1a3a5c; color: white; padding: .75rem 1rem; text-align: left; font-size: .9rem; }
+td { padding: .65rem 1rem; border-bottom: 1px solid #eee; font-size: .9rem; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f0f7ff; }
+
+/* Estados de filas */
+tr.activo td   { }
+tr.inactivo td { opacity: .65; }
+tr.ingreso td  { }
+tr.egreso td   { }
+
+.badge { padding: .2rem .6rem; border-radius: 999px; font-size: .78rem; font-weight: 600; }
+.badge-activo   { background: #d1e7dd; color: #0a5234; }
+.badge-inactivo { background: #e2e3e5; color: #41464b; }
+.badge-ingreso  { background: #cfe2ff; color: #084298; }
+.badge-egreso   { background: #f8d7da; color: #842029; }
+.badge-alerta   { background: #fff3cd; color: #664d03; font-size: .78rem; font-weight: 600; padding: .2rem .5rem; border-radius: 999px; }
+
+.alerta { color: #cc7000; font-weight: 700; }
+
+.card { background: white; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.card p { margin: .5rem 0; }
+
+.btn { display: inline-block; margin-top: 1rem; padding: .5rem 1.2rem; background: #1a3a5c; color: white; border-radius: 6px; text-decoration: none; }
+.btn:hover { background: #0d2440; }
+
+.empty { color: #888; font-style: italic; margin: 1rem 0; }
+
+footer { text-align: center; padding: 1.5rem; color: #888; font-size: .85rem; margin-top: 2rem; }
+
+.error-page { text-align: center; padding: 4rem; }
+.error-page h1 { font-size: 3rem; color: #cc0000; }

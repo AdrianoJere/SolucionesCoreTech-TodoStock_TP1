@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "productoId": 1,
+    "productoNombre": "Lavandina Concentrada 1L",
+    "tipo": "ingreso",
+    "cantidad": 50,
+    "fecha": "2026-04-10",
+    "motivo": "Compra a proveedor"
+  },
+  {
+    "id": 2,
+    "productoId": 2,
+    "productoNombre": "Detergente Limón 500ml",
+    "tipo": "egreso",
+    "cantidad": 15,
+    "fecha": "2026-04-12",
+    "motivo": "Despacho cliente mayorista"
+  },
+  {
+    "id": 3,
+    "productoId": 3,
+    "productoNombre": "Desengrasante Industrial 5L",
+    "tipo": "egreso",
+    "cantidad": 5,
+    "fecha": "2026-04-15",
+    "motivo": "Venta local"
+  }
+]

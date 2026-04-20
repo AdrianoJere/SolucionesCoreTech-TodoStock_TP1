@@ -1,0 +1,18 @@
+{
+  "name": "todostock",
+  "version": "1.0.0",
+  "description": "Sistema de gestión de stock - TodoStock S.A. - Primer Parcial Backend",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pug": "^3.0.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,49 @@
+extends ../layouts/base
+
+block content
+  h1 🏷️ #{producto.nombre}
+
+  .card
+    p
+      strong ID:
+      |  #{producto.id}
+    p
+      strong Precio:
+      |  $#{producto.precio.toFixed(2)}
+    p
+      strong Stock:
+      |  #{producto.stock} #{producto.unidad}
+      if producto.stockBajo
+        span.badge-alerta  ⚠ Stock bajo
+    p
+      strong Lote:
+      |  #{producto.lote}
+    p
+      strong Vencimiento:
+      |  #{producto.vencimiento}
+    p
+      strong Estado:
+      span.badge(class="badge-" + producto.estado)  #{producto.estado}
+
+  h2 Movimientos del producto
+
+  if movimientos.length === 0
+    p.empty Sin movimientos registrados.
+  else
+    table
+      thead
+        tr
+          th Fecha
+          th Tipo
+          th Cantidad
+          th Motivo
+      tbody
+        each m in movimientos
+          tr(class=m.tipo)
+            td= m.fecha
+            td
+              span.badge(class="badge-" + m.tipo)= m.tipo
+            td= m.impacto
+            td= m.motivo
+
+  a.btn(href="/") ← Volver al listado
