@@ -1,16 +1,17 @@
 {
-  "name": "todostock",
-  "version": "1.0.0",
-  "description": "Sistema de gestión de stock - TodoStock S.A. - Primer Parcial Backend",
+  "name": "solucionescoretech-todostock-tp2",
+  "version": "2.0.0",
+  "description": "TodoStock S.A. — Sistema de Gestión de Stock. Segunda entrega con MongoDB y Mongoose.",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "pug": "^3.0.2",
-    "dotenv": "^16.3.1"
+    "mongoose": "^7.6.3",
+    "pug": "^3.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
