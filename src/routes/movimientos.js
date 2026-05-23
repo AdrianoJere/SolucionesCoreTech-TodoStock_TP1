@@ -1,13 +1,16 @@
 const express = require('express');
-const router  = express.Router();
-const { validarMovimiento } = require('../middleware');
+const router = express.Router();
 const {
-  listarMovimientos, obtenerMovimiento, crearMovimiento, eliminarMovimiento
+  listarMovimientos,
+  obtenerMovimiento,
+  registrarMovimiento,
+  eliminarMovimiento,
 } = require('../controllers/movimientosController');
+const { validarMovimiento } = require('../middleware');
 
-router.get('/',                     listarMovimientos);  // ?tipo=ingreso&productoId=1
-router.get('/:id',                  obtenerMovimiento);  // ruta dinámica
-router.post('/', validarMovimiento, crearMovimiento);
-router.delete('/:id',               eliminarMovimiento);
+router.get('/', listarMovimientos);
+router.get('/:id', obtenerMovimiento);
+router.post('/', validarMovimiento, registrarMovimiento);
+router.delete('/:id', eliminarMovimiento);
 
 module.exports = router;

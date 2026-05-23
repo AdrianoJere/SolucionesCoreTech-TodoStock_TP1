@@ -1,30 +1,48 @@
-const express  = require('express');
-const router   = express.Router();
+const express = require('express');
+const router = express.Router();
 const Producto = require('../models/Producto');
 const Movimiento = require('../models/Movimiento');
 
-// Inicio - listado de productos
-router.get('/', (req, res) => {
-  const productos = Producto.getAll().map(p => ({ ...p.toJSON(), stockBajo: p.stockBajo }));
-  res.render('pages/index', { titulo: 'Productos — TodoStock S.A.', productos });
+// GET / — Lista de productos
+router.get('/', async (req, res) => {
+  try {
+    const productos = await Producto.find().sort({ createdAt: -1 });
+    res.render('pages/index', { titulo: 'TodoStock — Productos', productos });
+  } catch (error) {
+    res.status(500).render('pages/error', { mensaje: error.message });
+  }
 });
 
-// Detalle de producto (ruta dinámica)
-router.get('/productos/:id', (req, res) => {
-  const producto = Producto.getById(req.params.id);
-  if (!producto) return res.render('pages/error', { mensaje: 'Producto no encontrado', codigo: 404 });
-  const movimientos = Movimiento.getByProducto(req.params.id).map(m => ({ ...m.toJSON(), impacto: m.impacto }));
-  res.render('pages/detalleProducto', {
-    titulo: producto.nombre,
-    producto: { ...producto.toJSON(), stockBajo: producto.stockBajo },
-    movimientos
-  });
+// GET /productos/:id — Detalle de producto con movimientos
+router.get('/productos/:id', async (req, res) => {
+  try {
+    const producto = await Producto.findById(req.params.id);
+    if (!producto) {
+      return res.status(404).render('pages/error', { mensaje: 'Producto no encontrado' });
+    }
+    const movimientos = await Movimiento.find({ productoId: producto._id }).sort({
+      createdAt: -1,
+    });
+    res.render('pages/detalleProducto', {
+      titulo: `Detalle — ${producto.nombre}`,
+      producto,
+      movimientos,
+    });
+  } catch (error) {
+    res.status(500).render('pages/error', { mensaje: error.message });
+  }
 });
 
-// Listado de movimientos
-router.get('/movimientos', (req, res) => {
-  const movimientos = Movimiento.getAll().map(m => ({ ...m.toJSON(), impacto: m.impacto }));
-  res.render('pages/movimientos', { titulo: 'Movimientos de Stock', movimientos });
+// GET /movimientos — Lista de movimientos
+router.get('/movimientos', async (req, res) => {
+  try {
+    const movimientos = await Movimiento.find()
+      .populate('productoId', 'nombre')
+      .sort({ createdAt: -1 });
+    res.render('pages/movimientos', { titulo: 'TodoStock — Movimientos', movimientos });
+  } catch (error) {
+    res.status(500).render('pages/error', { mensaje: error.message });
+  }
 });
 
 module.exports = router;
