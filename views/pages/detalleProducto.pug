@@ -1,49 +1,51 @@
 extends ../layouts/base
 
-block content
-  h1 #{producto.nombre}
+block contenido
+  a.volver(href='/') ← Volver al listado
 
-  .card
-    p
-      strong ID:
-      |  #{producto.id}
-    p
-      strong Precio:
-      |  $#{producto.precio.toFixed(2)}
-    p
-      strong Stock:
-      |  #{producto.stock} #{producto.unidad}
-      if producto.stockBajo
-        span.badge-alerta  ⚠ Stock bajo
-    p
-      strong Lote:
-      |  #{producto.lote}
-    p
-      strong Vencimiento:
-      |  #{producto.vencimiento}
-    p
-      strong Estado:
-      span.badge(class="badge-" + producto.estado)  #{producto.estado}
+  h2 #{producto.nombre}
 
-  h2 Movimientos del producto
+  if producto.stockBajo
+    p.alerta 🔴 Este producto tiene stock bajo
+
+  table
+    tr
+      th Stock actual
+      td #{producto.stock}
+    tr
+      th Precio
+      td $#{producto.precio}
+    tr
+      th Unidad
+      td #{producto.unidad}
+    tr
+      th Lote
+      td #{producto.lote}
+    tr
+      th Vencimiento
+      td #{producto.vencimiento ? new Date(producto.vencimiento).toLocaleDateString('es-AR') : '-'}
+    tr
+      th Estado
+      td #{producto.estado}
+
+  h3 Historial de movimientos
 
   if movimientos.length === 0
-    p.empty Sin movimientos registrados.
+    p No hay movimientos registrados para este producto.
   else
     table
       thead
         tr
-          th Fecha
           th Tipo
           th Cantidad
+          th Impacto
           th Motivo
+          th Fecha
       tbody
         each m in movimientos
-          tr(class=m.tipo)
-            td= m.fecha
-            td
-              span.badge(class="badge-" + m.tipo)= m.tipo
-            td= m.impacto
-            td= m.motivo
-
-  a.btn(href="/") ← Volver al listado
+          tr(class=m.tipo === 'egreso' ? 'egreso' : 'ingreso')
+            td #{m.tipo}
+            td #{m.cantidad}
+            td #{m.impacto}
+            td #{m.motivo || '-'}
+            td #{new Date(m.createdAt).toLocaleString('es-AR')}
