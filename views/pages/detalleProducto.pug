@@ -1,17 +1,14 @@
 extends ../layouts/base
 
 block contenido
-  a.volver(href='/') ← Volver al listado
+  a(href='/') ← Volver al listado
 
   h2 #{producto.nombre}
-
-  if producto.stockBajo
-    p.alerta 🔴 Este producto tiene stock bajo
-
+  
   table
     tr
       th Stock actual
-      td #{producto.stock}
+      td #{producto.stock} #{producto.stockBajo ? '🔴 Stock bajo' : ''}
     tr
       th Precio
       td $#{producto.precio}
@@ -43,7 +40,7 @@ block contenido
           th Fecha
       tbody
         each m in movimientos
-          tr(class=m.tipo === 'egreso' ? 'egreso' : 'ingreso')
+          tr
             td #{m.tipo}
             td #{m.cantidad}
             td #{m.impacto}

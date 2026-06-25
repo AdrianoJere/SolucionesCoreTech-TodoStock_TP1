@@ -17,7 +17,7 @@ block contenido
           th Fecha
       tbody
         each m in movimientos
-          tr(class=m.tipo === 'egreso' ? 'egreso' : 'ingreso')
+          tr
             td #{m.productoNombre || (m.productoId && m.productoId.nombre) || '-'}
             td #{m.tipo}
             td #{m.cantidad}

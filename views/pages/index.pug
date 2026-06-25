@@ -6,15 +6,6 @@ block contenido
   if productos.length === 0
     p No hay productos registrados.
   else
-    //- Resumen general
-    .resumen
-      p Total de productos: #{productos.length}
-      - const bajosStock = productos.filter(p => p.stockBajo)
-      if bajosStock.length > 0
-        p.alerta 🔴 #{bajosStock.length} producto(s) con stock bajo
-      else
-        p ✅ Todos los productos tienen stock suficiente
-
     table
       thead
         tr
@@ -29,7 +20,7 @@ block contenido
           th Detalle
       tbody
         each p in productos
-          tr(class=p.stockBajo ? 'stock-bajo' : '')
+          tr
             td #{p.nombre}
             td #{p.stock}
             td $#{p.precio}
@@ -37,6 +28,6 @@ block contenido
             td #{p.lote}
             td #{p.vencimiento ? new Date(p.vencimiento).toLocaleDateString('es-AR') : '-'}
             td #{p.estado}
-            td #{p.stockBajo ? '🔴 Stock bajo' : '✅'}
+            td #{p.stockBajo ? '🔴 Stock bajo' : ''}
             td
               a(href=`/productos/${p._id}`) Ver detalle
