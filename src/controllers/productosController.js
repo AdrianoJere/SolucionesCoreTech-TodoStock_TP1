@@ -1,47 +1,103 @@
-// Controlador de Productos
 const Producto = require('../models/Producto');
 
-const listarProductos = (req, res) => {
-  const { estado } = req.query;
-  let productos = estado
-    ? Producto.getAll().filter(p => p.estado === estado)
-    : Producto.getAll();
-  res.json(productos.map(p => ({ ...p.toJSON(), stockBajo: p.stockBajo })));
+// GET /api/productos
+const listarProductos = async (req, res) => {
+  try {
+    const filtro = {};
+    if (req.query.estado) filtro.estado = req.query.estado;
+
+    const productos = await Producto.find(filtro).sort({ createdAt: -1 });
+    res.json(productos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-const obtenerProducto = (req, res) => {
-  const producto = Producto.getById(req.params.id);
-  if (!producto) return res.status(404).json({ error: `Producto ${req.params.id} no encontrado` });
-  res.json({ ...producto.toJSON(), stockBajo: producto.stockBajo });
+// GET /api/productos/:id
+const obtenerProducto = async (req, res) => {
+  try {
+    const producto = await Producto.findById(req.params.id);
+    if (!producto) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    res.json(producto);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-const crearProducto = (req, res) => {
-  const nuevo = Producto.create(req.body);
-  res.status(201).json(nuevo.toJSON());
+// POST /api/productos
+const crearProducto = async (req, res) => {
+  try {
+    const { nombre, precio, stock, unidad, lote, vencimiento } = req.body;
+    const producto = new Producto({ nombre, precio, stock, unidad, lote, vencimiento });
+    await producto.save();
+    res.status(201).json(producto);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-const actualizarStock = (req, res) => {
-  const { stock } = req.body;
-  if (stock === undefined || isNaN(stock) || stock < 0)
-    return res.status(400).json({ error: 'Stock inválido' });
-  const producto = Producto.updateStock(req.params.id, parseInt(stock));
-  if (!producto) return res.status(404).json({ error: `Producto ${req.params.id} no encontrado` });
-  res.json(producto.toJSON());
+// PATCH /api/productos/:id/stock
+const actualizarStock = async (req, res) => {
+  try {
+    const { stock } = req.body;
+    if (stock === undefined) {
+      return res.status(400).json({ error: 'El campo stock es obligatorio' });
+    }
+    const producto = await Producto.findByIdAndUpdate(
+      req.params.id,
+      { stock },
+      { new: true, runValidators: true }
+    );
+    if (!producto) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    res.json(producto);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-const actualizarEstado = (req, res) => {
-  const { estado } = req.body;
-  if (!['activo', 'inactivo'].includes(estado))
-    return res.status(400).json({ error: 'Estado inválido. Valores: activo, inactivo' });
-  const producto = Producto.updateEstado(req.params.id, estado);
-  if (!producto) return res.status(404).json({ error: `Producto ${req.params.id} no encontrado` });
-  res.json(producto.toJSON());
+// PATCH /api/productos/:id/estado
+const actualizarEstado = async (req, res) => {
+  try {
+    const { estado } = req.body;
+    if (!['activo', 'inactivo'].includes(estado)) {
+      return res.status(400).json({ error: 'Estado inválido. Use "activo" o "inactivo"' });
+    }
+    const producto = await Producto.findByIdAndUpdate(
+      req.params.id,
+      { estado },
+      { new: true }
+    );
+    if (!producto) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    res.json(producto);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-const eliminarProducto = (req, res) => {
-  const eliminado = Producto.delete(req.params.id);
-  if (!eliminado) return res.status(404).json({ error: `Producto ${req.params.id} no encontrado` });
-  res.json({ mensaje: `Producto ${req.params.id} eliminado correctamente` });
+// DELETE /api/productos/:id
+const eliminarProducto = async (req, res) => {
+  try {
+    const producto = await Producto.findByIdAndDelete(req.params.id);
+    if (!producto) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    res.json({ mensaje: `Producto "${producto.nombre}" eliminado correctamente` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-module.exports = { listarProductos, obtenerProducto, crearProducto, actualizarStock, actualizarEstado, eliminarProducto };
+module.exports = {
+  listarProductos,
+  obtenerProducto,
+  crearProducto,
+  actualizarStock,
+  actualizarEstado,
+  eliminarProducto,
+};

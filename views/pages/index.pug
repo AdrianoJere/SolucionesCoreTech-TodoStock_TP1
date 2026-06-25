@@ -1,37 +1,33 @@
 extends ../layouts/base
 
-block content
-  h1 Listado de Productos
+block contenido
+  h2 Listado de Productos
 
   if productos.length === 0
-    p.empty No hay productos registrados.
+    p No hay productos registrados.
   else
     table
       thead
         tr
-          th ID
           th Nombre
-          th Precio
           th Stock
+          th Precio
           th Unidad
           th Lote
           th Vencimiento
           th Estado
+          th ⚠️
           th Detalle
       tbody
         each p in productos
-          tr(class=p.estado)
-            td= p.id
-            td= p.nombre
-            td $#{p.precio.toFixed(2)}
+          tr
+            td #{p.nombre}
+            td #{p.stock}
+            td $#{p.precio}
+            td #{p.unidad}
+            td #{p.lote}
+            td #{p.vencimiento ? new Date(p.vencimiento).toLocaleDateString('es-AR') : '-'}
+            td #{p.estado}
+            td #{p.stockBajo ? '🔴 Stock bajo' : ''}
             td
-              span(class=p.stockBajo ? 'alerta' : '')= p.stock
-              if p.stockBajo
-                span.badge-alerta  ⚠ stock bajo
-            td= p.unidad
-            td= p.lote
-            td= p.vencimiento
-            td
-              span.badge(class="badge-" + p.estado)= p.estado
-            td
-              a(href="/productos/" + p.id) Ver
+              a(href=`/productos/${p._id}`) Ver detalle

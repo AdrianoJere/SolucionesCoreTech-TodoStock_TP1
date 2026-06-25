@@ -1,18 +1,17 @@
 doctype html
-html(lang="es")
+html(lang='es')
   head
-    meta(charset="UTF-8")
-    meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    title= titulo + " | TodoStock S.A."
-    link(rel="stylesheet" href="/css/style.css")
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title #{titulo}
+    link(rel='stylesheet', href='/css/style.css')
   body
     header
       nav
-        a(href="/") 📦 TodoStock S.A.
-        a(href="/movimientos") Movimientos
-        a(href="/api/productos") API Productos
-        a(href="/api/movimientos") API Movimientos
+        a(href='/') Productos
+        a(href='/movimientos') Movimientos
+      h1 📦 TodoStock S.A.
     main
-      block content
+      block contenido
     footer
-      p Distribuidora Mayorista TodoStock S.A. &copy; 2026
+      p IFTS 29 · Desarrollo Web Backend · 2° E · 1C2026

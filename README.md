@@ -1,31 +1,34 @@
-# TodoStock S.A. — Sistema de Gestión de Stock
+# 📦 TodoStock S.A. — Sistema de Gestión de Stock
 
-> Primer Parcial — Desarrollo de Sistemas Web (Back End)  
-> Caso #3 · 2° E · 1C 2026 · IFTS 29
+> Entrega Final — Desarrollo de Sistemas Web (Back End)  
+> Caso #3 · 2° E · 1C 2026 · Agencia de Habilidades para el Futuro · IFTS 29
 
 ---
 
-## Descripción
+## 📋 Descripción
 
 **TodoStock S.A.** es un sistema backend para la gestión de inventario de una distribuidora mayorista de artículos de limpieza. Permite registrar productos con información de lote y vencimiento, y gestionar movimientos de ingreso y egreso de mercadería con actualización automática del stock.
 
-Desarrollado con **Node.js** y **Express**, aplica los contenidos de los módulos D4 (POO con JavaScript), D5 (Fundamentos de Node.js) y D6 (Introducción a Express).
+En esta entrega final se incorporó **autenticación con JWT**, se realizó el **despliegue en Render con MongoDB Atlas**, y se mejoró la estructura general del proyecto siguiendo el patrón MVC.
 
 ---
 
-## Tecnologías
+## 🛠️ Tecnologías
 
-| Tecnología | Uso                                |
-| ---------- | ---------------------------------- |
-| Node.js    | Runtime del servidor               |
-| Express 4  | Framework web, rutas y middlewares |
-| Pug 3      | Motor de plantillas HTML           |
-| dotenv     | Variables de entorno               |
-| JSON (fs)  | Persistencia de datos              |
+| Tecnología | Uso |
+|---|---|
+| Node.js | Runtime del servidor |
+| Express 4 | Framework web, rutas y middlewares |
+| MongoDB Atlas | Base de datos NoSQL en la nube |
+| Mongoose | ODM para MongoDB |
+| JSON Web Token | Autenticación stateless |
+| bcryptjs | Hash seguro de contraseñas |
+| Pug 3 | Motor de plantillas HTML |
+| dotenv | Variables de entorno |
 
 ---
 
-## Estructura del proyecto
+## 📁 Estructura del proyecto
 
 ```
 todostock/
@@ -33,21 +36,24 @@ todostock/
 │   └── css/style.css
 ├── src/
 │   ├── app.js
-│   ├── data/
-│   │   ├── productos.json
-│   │   └── movimientos.json
+│   ├── config/
+│   │   └── db.js                    ← Conexión a MongoDB
 │   ├── models/
-│   │   ├── Producto.js        ← POO: props privadas, getters, stockBajo
-│   │   └── Movimiento.js      ← Herencia: Movimiento extends Registro
+│   │   ├── Producto.js              ← Schema Mongoose + virtual stockBajo
+│   │   ├── Movimiento.js            ← Schema Mongoose + virtual impacto
+│   │   └── Usuario.js               ← Schema con hash de password ← NUEVO
 │   ├── middleware/
-│   │   └── index.js           ← logger, validarProducto, validarMovimiento
+│   │   ├── index.js                 ← logger, validaciones, manejarErrores
+│   │   └── auth.js                  ← verifyToken, soloAdmin ← NUEVO
 │   ├── controllers/
 │   │   ├── productosController.js
-│   │   └── movimientosController.js
+│   │   ├── movimientosController.js
+│   │   └── authController.js        ← register, login, perfil ← NUEVO
 │   └── routes/
 │       ├── productos.js
 │       ├── movimientos.js
-│       └── vistas.js
+│       ├── vistas.js
+│       └── auth.js                  ← /api/auth ← NUEVO
 └── views/
     ├── layouts/base.pug
     └── pages/
@@ -59,88 +65,104 @@ todostock/
 
 ---
 
-## Instalación y ejecución
+## ⚙️ Instalación y ejecución
 
 ```bash
 git clone https://github.com/AdrianoJere/SolucionesCoreTech-TodoStock_TP1.git
 cd SolucionesCoreTech-TodoStock_TP1
 npm install
+```
+
+Crear el archivo `.env` en la raíz:
+
+```
+PORT=3000
+MONGO_URI=mongodb+srv://<usuario>:<password>@cluster0.xxxxx.mongodb.net/todostock
+JWT_SECRET=todostock_clave_secreta_muy_larga_2026
+JWT_EXPIRES_IN=8h
+```
+
+Iniciar el servidor:
+
+```bash
 npm start
+# o en modo desarrollo:
+npm run dev
 ```
 
-Abrir en: [http://localhost:3000](http://localhost:3000)
+Abrir en: http://localhost:3000
 
 ---
 
-## Endpoints API
+## 🔐 Autenticación con JWT
 
-### Productos — `/api/productos`
+Las rutas de la API requieren un token JWT válido en el header:
 
-| Método | Ruta                           | Descripción        |
-| ------ | ------------------------------ | ------------------ |
-| GET    | `/api/productos`               | Listar todos       |
-| GET    | `/api/productos?estado=activo` | Filtrar por estado |
-| GET    | `/api/productos/:id`           | Obtener por ID     |
-| POST   | `/api/productos`               | Crear producto     |
-| PATCH  | `/api/productos/:id/stock`     | Actualizar stock   |
-| PATCH  | `/api/productos/:id/estado`    | Actualizar estado  |
-| DELETE | `/api/productos/:id`           | Eliminar           |
+```
+Authorization: Bearer <token>
+```
 
-### Movimientos — `/api/movimientos`
+**Flujo:**
+1. Registrarse en `POST /api/auth/register`
+2. Hacer login en `POST /api/auth/login` → se obtiene el token
+3. Incluir el token en todas las requests a `/api/productos` y `/api/movimientos`
 
-| Método | Ruta                            | Descripción                            |
-| ------ | ------------------------------- | -------------------------------------- |
-| GET    | `/api/movimientos`              | Listar todos                           |
-| GET    | `/api/movimientos?tipo=ingreso` | Filtrar por tipo                       |
-| GET    | `/api/movimientos?productoId=1` | Filtrar por producto                   |
-| GET    | `/api/movimientos/:id`          | Obtener por ID                         |
-| POST   | `/api/movimientos`              | Registrar movimiento (actualiza stock) |
-| DELETE | `/api/movimientos/:id`          | Eliminar                               |
+**Roles disponibles:** `admin` y `operador`
 
 ---
 
-## Ejemplos de uso
+## 🔌 Endpoints API
 
-**Crear producto:**
+### Autenticación — `/api/auth`
 
-```json
-POST /api/productos
-{ "nombre": "Desinfectante 1L", "precio": 750, "stock": 40,
-  "unidad": "litro", "lote": "L-2024-010", "vencimiento": "2027-01-15" }
-```
+| Método | Ruta | Auth | Descripción |
+|---|---|---|---|
+| POST | `/api/auth/register` | ❌ | Registrar usuario |
+| POST | `/api/auth/login` | ❌ | Login → devuelve token |
+| GET | `/api/auth/perfil` | ✅ | Ver perfil del usuario logueado |
 
-**Registrar ingreso:**
+### Productos — `/api/productos` *(requieren token)*
 
-```json
-POST /api/movimientos
-{ "productoId": 1, "tipo": "ingreso", "cantidad": 50, "motivo": "Compra a proveedor" }
-```
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/productos` | Listar todos |
+| GET | `/api/productos?estado=activo` | Filtrar por estado |
+| GET | `/api/productos/:id` | Obtener por ID |
+| POST | `/api/productos` | Crear producto |
+| PATCH | `/api/productos/:id/stock` | Actualizar stock |
+| PATCH | `/api/productos/:id/estado` | Actualizar estado |
+| DELETE | `/api/productos/:id` | Eliminar |
 
-**Registrar egreso:**
+### Movimientos — `/api/movimientos` *(requieren token)*
 
-```json
-POST /api/movimientos
-{ "productoId": 2, "tipo": "egreso", "cantidad": 10, "motivo": "Despacho cliente" }
-```
-
-> Si el egreso supera el stock disponible → `400 Bad Request`
-
----
-
-## Integrantes
-
-| Integrante          | Rol                    |
-| ------------------- | ---------------------- |
-| Adriano Caloni      | Líder / Backend        |
-| Emiliano Gutierrez  | Modelos / Datos        |
-| Jeremias Imperiales | Vistas / Documentación |
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/movimientos` | Listar todos |
+| GET | `/api/movimientos?tipo=ingreso` | Filtrar por tipo |
+| GET | `/api/movimientos?productoId=...` | Filtrar por producto |
+| GET | `/api/movimientos/:id` | Obtener por ID |
+| POST | `/api/movimientos` | Registrar movimiento |
+| DELETE | `/api/movimientos/:id` | Eliminar |
 
 ---
 
-## Bibliografía
+## 👥 Integrantes
+
+| Integrante | Rol |
+|---|---|
+| Adriano Caloni | Líder / Backend — configuración, app.js, autenticación JWT, despliegue |
+| Emiliano Gutierrez | Modelos / Datos — Schemas Mongoose, virtuals, validaciones |
+| Jeremias Imperiales | Vistas / Documentación — Pug, ThunderClient, informe, video |
+
+---
+
+## 📚 Bibliografía
 
 - [Documentación oficial Node.js](https://nodejs.org/es/docs/)
 - [Documentación oficial Express](https://expressjs.com/es/)
+- [Documentación oficial Mongoose](https://mongoosejs.com/docs/)
+- [Documentación oficial MongoDB](https://www.mongodb.com/docs/)
+- [Documentación oficial JWT](https://jwt.io/introduction)
 - [Documentación oficial Pug](https://pugjs.org/)
-- [MDN — Clases en JavaScript](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Classes)
-- [Fazt Code — Node.js y Express](https://www.youtube.com/@FaztCode)
+- [Fazt Code — MongoDB y Mongoose con Node.js](https://www.youtube.com/@FaztCode)
+- [MitoCode — Node.js + Express + MongoDB](https://www.youtube.com/@MitoCode)
