@@ -1,7 +1,7 @@
 {
-  "name": "solucionescoretech-todostock-tp2",
+  "name": "solucionescoretech-todostock-tp3",
   "version": "2.0.0",
-  "description": "TodoStock S.A. — Sistema de Gestión de Stock. Segunda entrega con MongoDB y Mongoose.",
+  "description": "TodoStock S.A. — Sistema de Gestión de Stock. Entrega final con JWT, MongoDB Atlas y despliegue en Render.",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
