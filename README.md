@@ -146,6 +146,31 @@ Authorization: Bearer <token>
 
 ---
 
+## 🗂️ Diagramas
+
+Los diagramas de análisis y diseño del sistema se encuentran en la carpeta [`/diagramas`](./diagramas):
+
+| Diagrama | Archivo |
+|---|---|
+| Casos de Uso | [Diagrama de Casos de Uso.png](./diagramas/Diagrama%20de%20Casos%20de%20Uso.png) |
+| Clases | [Diagrama de Clases.png](./diagramas/Diagrama%20de%20Clases.png) |
+| Secuencia | [Diagrama de Secuencia - Request autenticada.png](./diagramas/Diagrama%20de%20Secuencia%20-%20Request%20autenticada.png) |
+| Modelo ER | [Modelo ER (Entidad-Relación).png](./diagramas/Modelo%20ER%20(Entidad-Relaci%C3%B3n).png) |
+
+> Los diagramas de casos de uso, clases y modelo ER fueron realizados con draw.io. El diagrama de secuencia fue generado con PlantUML.
+
+---
+
+## 🌐 Producción
+
+La aplicación está desplegada en Render con MongoDB Atlas:
+
+🔗 **https://solucionescoretech-todostock-tp1.onrender.com**
+
+> En el plan gratuito de Render el servidor entra en reposo tras 15 minutos de inactividad. La primera request puede tardar hasta 30 segundos.
+
+---
+
 ## 👥 Integrantes
 
 | Integrante | Rol |
